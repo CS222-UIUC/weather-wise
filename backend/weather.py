@@ -14,3 +14,4 @@ for period in forecast['periods']:
     print('')
 
 # Run: py .\backend\weather.py in Terminal
+# Add Test Cases
