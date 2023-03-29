@@ -1,6 +1,6 @@
 import React from 'react'
-import logo from './logo.svg'
-import { APP_NAME } from './constants'
+import logo from '../svgs/logo.svg'
+import { APP_NAME } from '../constants'
 import './App.css'
 
 const CURRENT_YEAR = new Date().getFullYear()
