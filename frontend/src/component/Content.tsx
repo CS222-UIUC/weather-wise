@@ -2,6 +2,7 @@ import React from 'react'
 
 import './Content.css'
 import LocationSearch from './LocationSearch'
+import HistoryGraph from './HistoryGraph'
 import WeatherWarnings from './WeatherWarnings'
 
 export default function Content() {
@@ -10,11 +11,7 @@ export default function Content() {
             <div className="App-columns">
                 <div className="App-column">
                     <LocationSearch />
-                    <div className="Weather-graphs">
-                        <h1>Graph Title</h1>
-                        <p>In theory, a graph. Instead, some cats.</p>
-                        <img src="res/cats.jpg"></img>
-                    </div>
+                    <HistoryGraph />
                 </div>
                 <div className="App-column">
                     <div className="Weather-current Weather-forecast-panel">

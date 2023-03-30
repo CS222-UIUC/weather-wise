@@ -22,14 +22,6 @@
     margin-right: 0rem;
 }
 
-.Weather-graphs {
-    margin: 1rem 0;
-}
-
-.Weather-graphs > img {
-    width: 25rem;
-}
-
 .Weather-forecast-panel {
     background: linear-gradient(
         rgba(255, 255, 255, 0.25),
