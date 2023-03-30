@@ -1,6 +1,7 @@
 import React from 'react'
 
 import './Content.css'
+import WeatherWarnings from './WeatherWarnings'
 
 export default function Content() {
     return (
@@ -37,11 +38,7 @@ export default function Content() {
                     </div>
                 </div>
             </div>
-            <div className="Weather-warnings">
-                <h1>Warnings and Advice</h1>
-                <p>This is a great warning</p>
-                <p>This is a great advice</p>
-            </div>
+            <WeatherWarnings />
         </div>
     )
 }
