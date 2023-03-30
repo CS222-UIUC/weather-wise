@@ -22,16 +22,6 @@
     margin-right: 0rem;
 }
 
-.Weather-forecast-panel {
-    background: linear-gradient(
-        rgba(255, 255, 255, 0.25),
-        rgba(255, 255, 255, 0.125)
-    );
-    padding: 1rem;
-    border-radius: 0.5rem;
-    margin: 0.5rem 0;
-}
-
 .Weather-current {
     font-size: var(--font-size-header);
 
