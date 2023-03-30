@@ -3,8 +3,7 @@ import Helmet from 'react-helmet'
 import { APP_NAME } from '../constants'
 import './App.css'
 import Header from './Header'
-
-const CURRENT_YEAR = new Date().getFullYear()
+import Footer from './Footer'
 
 function App() {
     return (
@@ -52,11 +51,7 @@ function App() {
                     <p>This is a great advice</p>
                 </div>
             </div>
-            <footer className="App-footer">
-                <p>
-                    ©️2023-{CURRENT_YEAR} {APP_NAME}, all rights reserved
-                </p>
-            </footer>
+            <Footer />
         </div>
     )
 }
