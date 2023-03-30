@@ -1,6 +1,7 @@
 import React from 'react'
 
 import './Content.css'
+import LocationSearch from './LocationSearch'
 import WeatherWarnings from './WeatherWarnings'
 
 export default function Content() {
@@ -8,10 +9,7 @@ export default function Content() {
         <div className="App-content">
             <div className="App-columns">
                 <div className="App-column">
-                    <input
-                        className="Weather-search"
-                        placeholder="Search for weather at..."
-                    ></input>
+                    <LocationSearch />
                     <div className="Weather-graphs">
                         <h1>Graph Title</h1>
                         <p>In theory, a graph. Instead, some cats.</p>
