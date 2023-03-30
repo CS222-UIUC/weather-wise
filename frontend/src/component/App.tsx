@@ -1,17 +1,14 @@
 import React from 'react'
-import logo from '../svgs/logo.svg'
 import { APP_NAME } from '../constants'
 import './App.css'
+import Header from './Header'
 
 const CURRENT_YEAR = new Date().getFullYear()
 
 function App() {
     return (
         <div className="App">
-            <header className="App-header">
-                <img src={logo} className="App-logo"></img>
-                <h1 className="App-title">{APP_NAME}</h1>
-            </header>
+            <Header />
             <div className="App-content">
                 <div className="App-columns">
                     <div className="App-column">

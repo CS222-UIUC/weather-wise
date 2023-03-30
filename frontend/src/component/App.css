@@ -15,42 +15,6 @@
     --font-size-text: 1rem;
 }
 
-.App-header {
-    font-size: var(--font-size-title);
-    background: linear-gradient(
-        rgba(255, 255, 255, 0.125),
-        rgba(255, 255, 255, 0)
-    );
-    padding: 0 0.5rem;
-
-    display: flex;
-    align-items: center;
-}
-
-.App-logo {
-    height: var(--font-size-title);
-    pointer-events: none;
-}
-
-@keyframes App-logo-spin {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-    .App-logo {
-        animation: App-logo-spin infinite 20s linear;
-    }
-}
-
-.App-title {
-    font-size: var(--font-size-title);
-}
-
 .App-footer {
     text-align: center;
     padding-bottom: 0.25rem;
