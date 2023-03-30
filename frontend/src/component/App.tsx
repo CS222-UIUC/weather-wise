@@ -1,4 +1,5 @@
 import React from 'react'
+import Helmet from 'react-helmet'
 import { APP_NAME } from '../constants'
 import './App.css'
 import Header from './Header'
@@ -8,6 +9,9 @@ const CURRENT_YEAR = new Date().getFullYear()
 function App() {
     return (
         <div className="App">
+            <Helmet>
+                <title>{APP_NAME}</title>
+            </Helmet>
             <Header />
             <div className="App-content">
                 <div className="App-columns">
