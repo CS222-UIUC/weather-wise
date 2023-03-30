@@ -3,7 +3,9 @@ import React from 'react'
 import './Content.css'
 import LocationSearch from './LocationSearch'
 import HistoryGraph from './HistoryGraph'
-import WeatherPanel from './WeatherPanel'
+import WeatherForecastCurrent from './WeatherForecastCurrent'
+import WeatherForecastHourly from './WeatherForecastHourly'
+import WeatherForecastDaily from './WeatherForecastDaily'
 import WeatherWarnings from './WeatherWarnings'
 
 export default function Content() {
@@ -15,23 +17,9 @@ export default function Content() {
                     <HistoryGraph />
                 </div>
                 <div className="App-column">
-                    <WeatherPanel className="Weather-current">
-                        <div className="Weather-current-column">
-                            <div className="Weather-current-row">70°</div>
-                            <div className="Weather-current-row">
-                                H:74°, L:65°
-                            </div>
-                        </div>
-                        <div className="Weather-current-column">
-                            Other current weather information here
-                        </div>
-                    </WeatherPanel>
-                    <WeatherPanel className="Weather-hourly">
-                        Insert forecast by the hour
-                    </WeatherPanel>
-                    <WeatherPanel className="Weather-daily">
-                        Insert forecast by the day
-                    </WeatherPanel>
+                    <WeatherForecastCurrent />
+                    <WeatherForecastHourly />
+                    <WeatherForecastDaily />
                 </div>
             </div>
             <WeatherWarnings />

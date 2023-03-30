@@ -1,0 +1,19 @@
+.WeatherForecastCurrent {
+    font-size: var(--font-size-header);
+
+    display: flex;
+}
+
+.WeatherForecastCurrent-column {
+    display: flex;
+    flex-grow: 1;
+    flex-shrink: 1;
+    flex-basis: 0;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.WeatherForecastCurrent-row {
+    margin: 0.5rem 0;
+}
