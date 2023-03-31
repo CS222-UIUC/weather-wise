@@ -1,5 +1,5 @@
 import requests
-from flask import Flask
+from flask import Flask, jsonify
 
 def parse(forecast):
     parsed = []
@@ -14,11 +14,11 @@ def parse(forecast):
 
 app = Flask(__name__)
 
-@app.route("/", methods=["GET"])
+@app.route("/", methods = ["GET"])
 def weather(url):
     response = requests.get(url)
-    parse(response.json()['properties'])
-    return "Hello, World!"
+    forecast = parse(response.json()['properties'])
+    return jsonify(forecast)
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=3001)

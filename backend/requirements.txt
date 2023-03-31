@@ -1,2 +1,2 @@
-Flask == 2.2.2 # Web framework
-black == 23.1.0 # Formatter
+Flask == 2.2.2 
+black == 23.1.0 
