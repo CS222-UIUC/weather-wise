@@ -1,0 +1,35 @@
+.Header {
+    font-size: var(--font-size-title);
+    background: linear-gradient(
+        rgba(255, 255, 255, 0.125),
+        rgba(255, 255, 255, 0)
+    );
+    padding: 0 0.5rem;
+
+    display: flex;
+    align-items: center;
+}
+
+.Header-logo {
+    height: var(--font-size-title);
+    pointer-events: none;
+}
+
+@keyframes Header-logo-spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .Header-logo {
+        animation: Header-logo-spin infinite 20s linear;
+    }
+}
+
+.Header-title {
+    font-size: var(--font-size-title);
+}

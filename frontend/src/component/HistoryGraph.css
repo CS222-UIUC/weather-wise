@@ -1,0 +1,7 @@
+.HistoryGraph {
+    margin: 1rem 0;
+}
+
+.HistoryGraph > img {
+    width: 25rem;
+}

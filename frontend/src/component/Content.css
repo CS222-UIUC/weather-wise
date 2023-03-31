@@ -1,0 +1,28 @@
+.App-content {
+    margin-top: 0.5rem;
+    flex-grow: 1;
+    padding: 0 0.5rem;
+}
+
+.App-columns {
+    display: flex;
+}
+
+.App-column {
+    flex-grow: 1;
+    flex-shrink: 1;
+    flex-basis: 0;
+    margin: 0 2rem;
+}
+
+.App-column:first-child {
+    margin-left: 0rem;
+}
+.App-column:last-child {
+    margin-right: 0rem;
+}
+
+.Weather-hourly,
+.Weather-daily {
+    height: 5rem;
+}
