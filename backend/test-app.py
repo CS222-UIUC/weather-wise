@@ -34,13 +34,13 @@ from app import *
 
 # jsonify(forecast)
 
-def testJsonify(url):
-    if weather(url) != None:
-        print("🎉")
-    else:
-        print("😭")
+# def testJsonify(url):
+    # if weather(url) != None:
+        # print("🎉")
+    # else:
+        # print("😭")
 
-url = "https://api.weather.gov/zones/forecast/MNZ060/forecast"
-testJsonify(url)
+# url = "https://api.weather.gov/zones/forecast/MNZ060/forecast"
+# testJsonify(url)
 
 
