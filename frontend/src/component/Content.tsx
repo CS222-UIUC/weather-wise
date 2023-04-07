@@ -10,13 +10,13 @@ import WeatherWarnings from './WeatherWarnings'
 
 export default function Content() {
     return (
-        <div className="App-content">
-            <div className="App-columns">
-                <div className="App-column">
+        <div className="Content">
+            <div className="Content-columns">
+                <div className="Content-column">
                     <LocationSearch />
                     <HistoryGraph />
                 </div>
-                <div className="App-column">
+                <div className="Content-column">
                     <WeatherForecastCurrent />
                     <WeatherForecastHourly />
                     <WeatherForecastDaily />
