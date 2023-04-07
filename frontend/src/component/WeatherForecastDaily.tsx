@@ -2,7 +2,7 @@ import React from 'react'
 
 import WeatherPanel from './WeatherPanel'
 
-import './WeatherForecastDaily.css'
+import './WeatherForecastDaily.sass'
 
 export default function WeatherForecastDaily() {
     return (

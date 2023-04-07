@@ -1,6 +1,6 @@
 import React from 'react'
 
-import './HistoryGraph.css'
+import './HistoryGraph.sass'
 
 export default function HistoryGraph() {
     return (

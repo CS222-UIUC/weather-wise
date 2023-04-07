@@ -1,6 +1,6 @@
 import React from 'react'
 
-import './Content.css'
+import './Content.sass'
 import LocationSearch from './LocationSearch'
 import HistoryGraph from './HistoryGraph'
 import WeatherForecastCurrent from './WeatherForecastCurrent'

@@ -2,7 +2,7 @@ import React from 'react'
 
 import WeatherPanel from './WeatherPanel'
 
-import './WeatherForecastHourly.css'
+import './WeatherForecastHourly.sass'
 
 export default function WeatherForecastHourly() {
     return (

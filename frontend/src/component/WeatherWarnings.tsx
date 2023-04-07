@@ -1,6 +1,6 @@
 import React from 'react'
 
-import './WeatherWarnings.css'
+import './WeatherWarnings.sass'
 
 export default function WeatherWarnings() {
     return (

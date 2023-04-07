@@ -3,7 +3,7 @@ import { APP_NAME } from '../constants'
 
 const CURRENT_YEAR = new Date().getFullYear()
 
-import './Footer.css'
+import './Footer.sass'
 
 export default function Footer() {
     return (
