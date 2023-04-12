@@ -1,6 +1,6 @@
 import React, { PropsWithChildren } from 'react'
 
-import './WeatherPanel.css'
+import './WeatherPanel.sass'
 
 interface WeatherPanelProps {
     className?: string

@@ -2,7 +2,7 @@ import React from 'react'
 import { APP_NAME } from '../constants'
 import logo from '../svgs/logo.svg'
 
-import './Header.css'
+import './Header.sass'
 
 export default function Header() {
     return (

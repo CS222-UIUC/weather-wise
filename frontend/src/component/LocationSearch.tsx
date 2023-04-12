@@ -1,6 +1,6 @@
 import React from 'react'
 
-import './LocationSearch.css'
+import './LocationSearch.sass'
 
 export default function LocationSearch() {
     return (
