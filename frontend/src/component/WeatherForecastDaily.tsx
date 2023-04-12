@@ -2,11 +2,11 @@ import React from 'react'
 
 import WeatherPanel from './WeatherPanel'
 
-import './WeatherForecastDaily.sass'
+import styles from './WeatherForecastDaily.module.sass'
 
 export default function WeatherForecastDaily() {
     return (
-        <WeatherPanel className="WeatherForecastDaily">
+        <WeatherPanel className={styles.WeatherForecastDaily}>
             Insert forecast by the day
         </WeatherPanel>
     )
