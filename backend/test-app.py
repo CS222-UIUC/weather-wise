@@ -41,4 +41,10 @@ from app import *
         # print("😭")
 
 # url = "https://api.weather.gov/zones/forecast/MNZ060/forecast"
+<<<<<<< HEAD
 # testJsonify(url)
+=======
+# testJsonify(url)
+
+
+>>>>>>> 657c78b9f8564fde7e8fddc0629a1f16b55ecbd3
