@@ -3,11 +3,11 @@ import { APP_NAME } from '../constants'
 
 const CURRENT_YEAR = new Date().getFullYear()
 
-import './Footer.sass'
+import styles from './Footer.module.sass'
 
 export default function Footer() {
     return (
-        <footer className="Footer">
+        <footer className={styles.Footer}>
             <p>
                 ©️2023-{CURRENT_YEAR} {APP_NAME}, all rights reserved
             </p>
