@@ -10,15 +10,16 @@ def parse(forecast):
         if period['name'] == 'Rest Of Today':
             parsed.append(period['name'])
             parsed.append(period['detailedForecast'])
-    return parsed
+    weather = ",".join((str(parsed).split(','))[1:])[:-1]
+    return weather
 
 app = Flask(__name__)
 
-@app.route("/", methods = ["GET"])
+@app.route("/<path:url>", methods = ["GET"])
 def weather(url):
-    response = requests.get(url)
+    response = requests.get(str(url))
     forecast = parse(response.json()['properties'])
-    return jsonify(forecast)
+    return forecast
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=3001)
+    app.run(host = "0.0.0.0", port = 5000)
