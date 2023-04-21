@@ -2,16 +2,16 @@ import React from 'react'
 
 import WeatherPanel from './WeatherPanel'
 
-import './WeatherForecastCurrent.sass'
+import styles from './WeatherForecastCurrent.module.sass'
 
 export default function WeatherForecastCurrent() {
     return (
-        <WeatherPanel className="WeatherForecastCurrent">
-            <div className="WeatherForecastCurrent-column">
-                <div className="WeatherForecastCurrent-row">70°</div>
-                <div className="WeatherForecastCurrent-row">H:74°, L:65°</div>
+        <WeatherPanel className={styles.WeatherForecastCurrent}>
+            <div className={styles.column}>
+                <div className={styles.row}>70°</div>
+                <div className={styles.row}>H:74°, L:65°</div>
             </div>
-            <div className="WeatherForecastCurrent-column">
+            <div className={styles.column}>
                 Other current weather information here
             </div>
         </WeatherPanel>

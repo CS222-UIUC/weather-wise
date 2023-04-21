@@ -1,6 +1,6 @@
 import React from 'react'
 
-import './Content.sass'
+import styles from './Content.module.sass'
 import LocationSearch from './LocationSearch'
 import HistoryGraph from './HistoryGraph'
 import WeatherForecastCurrent from './WeatherForecastCurrent'
@@ -10,13 +10,13 @@ import WeatherWarnings from './WeatherWarnings'
 
 export default function Content() {
     return (
-        <div className="Content">
-            <div className="Content-columns">
-                <div className="Content-column">
+        <div className={styles.Content}>
+            <div className={styles.columns}>
+                <div className={styles.column}>
                     <LocationSearch />
                     <HistoryGraph />
                 </div>
-                <div className="Content-column">
+                <div className={styles.column}>
                     <WeatherForecastCurrent />
                     <WeatherForecastHourly />
                     <WeatherForecastDaily />
