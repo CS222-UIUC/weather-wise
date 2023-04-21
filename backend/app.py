@@ -1,5 +1,5 @@
 import requests
-from flask import Flask, jsonify
+from flask import Flask
 
 def parse(forecast):
     parsed = []
