@@ -31,6 +31,7 @@ def get_properties(geolocation: Location):
         return None
 
 
+# Gets daily forecast from properties
 def get_daily_forecast(properties):
     dailyForecastResponse = requests.get(properties["forecast"])
 
@@ -43,6 +44,7 @@ def get_daily_forecast(properties):
         return None
 
 
+# Gets the hourly forecast from properties
 def get_hourly_forecast(properties):
     hourlyForecastResponse = requests.get(properties["forecastHourly"])
 
@@ -55,32 +57,8 @@ def get_hourly_forecast(properties):
         return None
 
 
-# Based on location, find:
-@app.route("/<location>")
-def weather(location):
-    # Define latitude and longitude using coordinates(location) function
-    geolocation = location_to_geolocation(location)
-
-    if not geolocation:
-        return Response(status=404)
-
-    properties = get_properties(geolocation)
-
-    if not properties:
-        return Response(status=500)
-
-    timezone = properties["timeZone"]
-
-    dailyForecast = get_daily_forecast(properties)
-
-    if not dailyForecast:
-        return Response(status=500)
-
-    hourlyForecast = get_hourly_forecast(properties)
-
-    if not hourlyForecast:
-        return Response(status=500)
-
+# Generates the weather report from the properties and forecasts
+def generate_response(properties, dailyForecast, hourlyForecast):
     # High and low temperature
     highTemperature = ""
     lowTemperature = ""
@@ -94,6 +72,7 @@ def weather(location):
             lowTemperature = str(period["temperature"])
     # Current temperature
     currentTemperature = ""
+    timezone = properties["timeZone"]
     now = datetime.now(pytz.timezone(timezone))
     currentDateTime = now.strftime("%Y-%m-%dT%H:%M:%S%z")
     currentDateTime = currentDateTime[:-2] + ":" + currentDateTime[-2:]
@@ -143,7 +122,37 @@ def weather(location):
             "5": {"day": days[5], "weather": dailyTemperatures[5]},
         },
     }
+
     return jsonify(dictionary)  # Return as a JSON
+
+
+# Based on location, find:
+@app.route("/<location>")
+def weather(location):
+    # Define latitude and longitude using coordinates(location) function
+    geolocation = location_to_geolocation(location)
+
+    if not geolocation:
+        return Response(status=404)
+
+    properties = get_properties(geolocation)
+
+    if not properties:
+        return Response(status=500)
+
+    timezone = properties["timeZone"]
+
+    dailyForecast = get_daily_forecast(properties)
+
+    if not dailyForecast:
+        return Response(status=500)
+
+    hourlyForecast = get_hourly_forecast(properties)
+
+    if not hourlyForecast:
+        return Response(status=500)
+
+    return generate_response(properties, dailyForecast, hourlyForecast)
 
 
 if __name__ == "__main__":  # Run app
