@@ -145,78 +145,75 @@ def get_last_24_hours(properties, dailyForecast, location: Location):
             currentTemp = thisTemp
 
     return {
-        "min": minTemp,
-        "current": currentTemp,
+        "low": math.floor(minTemp),
+        "current": math.floor(currentTemp),
     }
 
 
 # Generates the weather report from the properties and forecasts
-def generate_response(properties, dailyForecast, hourlyForecast, last24Hours):
-    # High and low temperature
-    highTemperature = ""
-    lowTemperature = ""
-    for period in dailyForecast:
-        if period["number"] == 1:
-            highTemperature = str(period["temperature"])
-            otherWeatherInformation = str(
-                period["detailedForecast"]
-            )  # Other weather information
-        if period["number"] == 2:
-            lowTemperature = str(period["temperature"])
-    # Current temperature
-    currentTemperature = ""
-    timezone = properties["timeZone"]
-    now = datetime.now(pytz.timezone(timezone))
-    currentDateTime = now.strftime("%Y-%m-%dT%H:%M:%S%z")
-    currentDateTime = currentDateTime[:-2] + ":" + currentDateTime[-2:]
-    currentDateTime = currentDateTime[:-11] + "00:00-05:00"
-    for period in hourlyForecast:
-        if currentDateTime == str(period["startTime"]):
-            currentTemperature = period["temperature"]
-            break
-    # Hourly temperature
-    hourlyTemperatures = []
-    for period in hourlyForecast:
-        if period["number"] <= 6:
-            hourlyTemperatures.append(period["temperature"])
-    now = datetime.now()
-    rounded = now.replace(minute=0, second=0, microsecond=0) + timedelta(hours=1)
-    futureHours = []
-    for time in range(1, 7):
-        hour = (rounded + timedelta(hours=time)).strftime("%I:%M %p")
-        futureHours.append(hour)
-    # Daily temperature
-    days = []
-    dailyTemperatures = []
-    for period in dailyForecast:
-        if period["number"] <= 6:
-            days.append(period["name"])
-            dailyTemperatures.append(period["temperature"])
-    print(days)
-    print(dailyTemperatures)
-    dictionary = {
-        "current": currentTemperature,
-        "other": otherWeatherInformation,
-        "today": {"high": highTemperature, "low": lowTemperature},
-        "hourly": {
-            "0": {"time": futureHours[0], "weather": hourlyTemperatures[0]},
-            "1": {"time": futureHours[1], "weather": hourlyTemperatures[1]},
-            "2": {"time": futureHours[2], "weather": hourlyTemperatures[2]},
-            "3": {"time": futureHours[3], "weather": hourlyTemperatures[3]},
-            "4": {"time": futureHours[4], "weather": hourlyTemperatures[4]},
-            "5": {"time": futureHours[5], "weather": hourlyTemperatures[5]},
-        },
-        "daily": {
-            "0": {"day": days[0], "weather": dailyTemperatures[0]},
-            "1": {"day": days[1], "weather": dailyTemperatures[1]},
-            "2": {"day": days[2], "weather": dailyTemperatures[2]},
-            "3": {"day": days[3], "weather": dailyTemperatures[3]},
-            "4": {"day": days[4], "weather": dailyTemperatures[4]},
-            "5": {"day": days[5], "weather": dailyTemperatures[5]},
-        },
+def generate_response(properties, weeklyForecast, dailyForecast, last24Hours):
+    startIndex = 0
+    if not weeklyForecast[0]["isDaytime"]:
+        # Ignore first result if it is not daytime
+        startIndex = 1
+
+    firstPeriodOfWeek = weeklyForecast[startIndex]
+    unit = firstPeriodOfWeek["temperatureUnit"]
+
+    # Generate today part
+    today = {
+        "high": firstPeriodOfWeek["temperature"],
+        "low": min(firstPeriodOfWeek["temperature"], last24Hours["low"]),
+        "current": last24Hours["current"],
+        "shortForecast": firstPeriodOfWeek["shortForecast"],
+        "detailedForecast": firstPeriodOfWeek["detailedForecast"],
     }
 
-    return jsonify(dictionary)  # Return as a JSON
+    # Generate weekly part
+    weekly = []
+
+    # We iterate in pairs, since the way this forecast is set up, it goes
+    # day -> night -> day...
+    for i in range(startIndex, len(weeklyForecast) - 1, 2):
+        day = weeklyForecast[i]
+        night = weeklyForecast[i + 1]
+
+        weekly.append(
+            {
+                "day": day["name"],
+                "high": day["temperature"],
+                "low": night["temperature"],
+                "shortForecast": day["shortForecast"],
+                "detailedForecast": day["detailedForecast"],
+            }
+        )
+
+    # Generate daily part
+    daily = []
+
+    for i in range(len(dailyForecast)):
+        hour = dailyForecast[i]
+        hourN = datetime.fromisoformat(hour["startTime"]).hour
+        daily.append(
+            {
+                "hour": hourN,
+                "temperature": hour["temperature"],
+                "shortForecast": hour["shortForecast"],
+            }
+        )
+
+        if i >= 23:
+            break
+
+    # Jsonify final result
+    return jsonify(
+        {
+            "unit": unit,
+            "today": today,
+            "daily": daily,
+            "weekly": weekly,
+        }
+    )
 
 
 # Based on location, find:
