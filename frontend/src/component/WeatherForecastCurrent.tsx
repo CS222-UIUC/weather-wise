@@ -49,6 +49,9 @@ class CurrentWeather {
     
     
 }
+
+import styles from './WeatherForecastCurrent.module.sass'
+
 export default function WeatherForecastCurrent() {
     const [data, setdata] = useState([{}])
     useEffect( () => {
@@ -72,13 +75,13 @@ export default function WeatherForecastCurrent() {
             </div>
             <div className={icons.WeatherIcon}>
                 {weather.getImage()}
+        <WeatherPanel className={styles.WeatherForecastCurrent}>
+            <div className={styles.column}>
+                <div className={styles.row}>70°</div>
+                <div className={styles.row}>H:74°, L:65°</div>
             </div>
-            <div className="WeatherForecastCurrent-column">
-                {typeof(data) !== 'string' ? (
-                    <p>Loading...</p>
-                ) : (
-                    <p>{data}</p>
-                )}
+            <div className={styles.column}>
+                Other current weather information here
             </div>
         </WeatherPanel>
     )

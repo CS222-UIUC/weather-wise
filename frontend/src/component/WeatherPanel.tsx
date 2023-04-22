@@ -1,6 +1,6 @@
 import React, { PropsWithChildren } from 'react'
 
-import './WeatherPanel.css'
+import styles from './WeatherPanel.module.sass'
 
 interface WeatherPanelProps {
     className?: string
@@ -11,7 +11,7 @@ export default function WeatherPanel({
     children,
 }: PropsWithChildren<WeatherPanelProps>) {
     const finalClassName =
-        'WeatherPanel' + (className == undefined ? '' : ' ' + className)
+        styles.WeatherPanel + (className == undefined ? '' : ' ' + className)
 
     return <div className={finalClassName}>{children}</div>
 }
