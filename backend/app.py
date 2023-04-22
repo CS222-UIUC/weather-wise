@@ -3,6 +3,7 @@ import json
 from datetime import datetime, timedelta
 import pytz
 from flask import Flask, jsonify, Response
+from geopy.location import Location
 from geopy.geocoders import Nominatim
 
 geolocator = Nominatim(user_agent="weather-app", timeout=10)
@@ -14,6 +15,46 @@ def location_to_geolocation(location):
     return geolocator.geocode(query=location, exactly_one=True)
 
 
+# Get weather properties, used to request other data such as forecasts
+def get_properties(geolocation: Location):
+    propertiesUrl = (
+        f"https://api.weather.gov/points/{geolocation.latitude},{geolocation.longitude}"
+    )
+    propertiesResponse = requests.get(propertiesUrl)
+
+    if 200 >= propertiesResponse.status_code >= 299:
+        return None
+
+    try:
+        return propertiesResponse.json()["properties"]
+    except:
+        return None
+
+
+def get_daily_forecast(properties):
+    dailyForecastResponse = requests.get(properties["forecast"])
+
+    if 200 >= dailyForecastResponse.status_code >= 299:
+        return None
+
+    try:
+        return dailyForecastResponse.json()["properties"]["periods"]
+    except:
+        return None
+
+
+def get_hourly_forecast(properties):
+    hourlyForecastResponse = requests.get(properties["forecastHourly"])
+
+    if 200 >= hourlyForecastResponse.status_code >= 299:
+        return None
+
+    try:
+        return hourlyForecastResponse.json()["properties"]["periods"]
+    except:
+        return None
+
+
 # Based on location, find:
 @app.route("/<location>")
 def weather(location):
@@ -23,15 +64,27 @@ def weather(location):
     if not geolocation:
         return Response(status=404)
 
-    baseUrl = (
-        f"https://api.weather.gov/points/{geolocation.latitude},{geolocation.longitude}"
-    )
-    baseResponse = requests.get(baseUrl)
-    highLowResponse = requests.get(str(baseResponse.json()["properties"]["forecast"]))
+    properties = get_properties(geolocation)
+
+    if not properties:
+        return Response(status=500)
+
+    timezone = properties["timeZone"]
+
+    dailyForecast = get_daily_forecast(properties)
+
+    if not dailyForecast:
+        return Response(status=500)
+
+    hourlyForecast = get_hourly_forecast(properties)
+
+    if not hourlyForecast:
+        return Response(status=500)
+
     # High and low temperature
     highTemperature = ""
     lowTemperature = ""
-    for period in highLowResponse.json()["properties"]["periods"]:
+    for period in dailyForecast:
         if period["number"] == 1:
             highTemperature = str(period["temperature"])
             otherWeatherInformation = str(
@@ -40,25 +93,18 @@ def weather(location):
         if period["number"] == 2:
             lowTemperature = str(period["temperature"])
     # Current temperature
-    currentResponse = requests.get(
-        str(baseResponse.json()["properties"]["forecastHourly"])
-    )
     currentTemperature = ""
-    tz = pytz.timezone("America/New_York")
-    now = datetime.now(tz)
+    now = datetime.now(pytz.timezone(timezone))
     currentDateTime = now.strftime("%Y-%m-%dT%H:%M:%S%z")
     currentDateTime = currentDateTime[:-2] + ":" + currentDateTime[-2:]
     currentDateTime = currentDateTime[:-11] + "00:00-05:00"
-    for period in currentResponse.json()["properties"]["periods"]:
+    for period in hourlyForecast:
         if currentDateTime == str(period["startTime"]):
             currentTemperature = period["temperature"]
             break
     # Hourly temperature
-    hourlyResponse = requests.get(
-        str(baseResponse.json()["properties"]["forecastHourly"])
-    )
     hourlyTemperatures = []
-    for period in hourlyResponse.json()["properties"]["periods"]:
+    for period in hourlyForecast:
         if period["number"] <= 6:
             hourlyTemperatures.append(period["temperature"])
     now = datetime.now()
@@ -70,8 +116,7 @@ def weather(location):
     # Daily temperature
     days = []
     dailyTemperatures = []
-    dailyResponse = requests.get(str(baseResponse.json()["properties"]["forecast"]))
-    for period in dailyResponse.json()["properties"]["periods"]:
+    for period in dailyForecast:
         if period["number"] <= 6:
             days.append(period["name"])
             dailyTemperatures.append(period["temperature"])
