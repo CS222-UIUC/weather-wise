@@ -2,25 +2,30 @@ import requests
 import json
 from datetime import datetime, timedelta
 import pytz
-from flask import Flask, jsonify
+from flask import Flask, jsonify, Response
 from geopy.geocoders import Nominatim
 
+geolocator = Nominatim(user_agent="weather-app", timeout=10)
 app = Flask(__name__)
 
+
 # Convert location to latitude and longitude coordinates using geopy
-def coordinates(location):
-    geolocator = Nominatim(user_agent="app", timeout=10)
-    location = geolocator.geocode(location)
-    locations = [location.latitude, location.longitude]
-    return locations
+def location_to_geolocation(location):
+    return geolocator.geocode(query=location, exactly_one=True)
+
 
 # Based on location, find:
 @app.route("/<location>")
 def weather(location):
     # Define latitude and longitude using coordinates(location) function
-    latitude = (coordinates(location))[0]
-    longitude = (coordinates(location))[1]
-    baseUrl = "https://api.weather.gov/points/" + str(latitude) + "," + str(longitude)
+    geolocation = location_to_geolocation(location)
+
+    if not geolocation:
+        return Response(status=404)
+
+    baseUrl = (
+        f"https://api.weather.gov/points/{geolocation.latitude},{geolocation.longitude}"
+    )
     baseResponse = requests.get(baseUrl)
     highLowResponse = requests.get(str(baseResponse.json()["properties"]["forecast"]))
     # High and low temperature
