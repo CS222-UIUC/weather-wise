@@ -5,6 +5,8 @@ import pytz
 from flask import Flask, jsonify, Response
 from geopy.location import Location
 from geopy.geocoders import Nominatim
+from pytemp import pytemp
+import math
 
 geolocator = Nominatim(user_agent="weather-app", timeout=10)
 app = Flask(__name__)
@@ -57,8 +59,99 @@ def get_hourly_forecast(properties):
         return None
 
 
+# Gets current weather data from properties, this is incredibly long because
+# weather data is not well centralized, and we chose to use a free service
+def get_last_24_hours(properties, dailyForecast, location: Location):
+    # Get all observation stations
+    observationStationsResponse = requests.get(properties["observationStations"])
+
+    if 200 >= observationStationsResponse.status_code >= 299:
+        return None
+
+    observationStations = None
+
+    try:
+        observationStations = observationStationsResponse.json()["features"]
+    except:
+        return None
+
+    # Get the observation station closest to us
+    best = None
+    best_dist = None
+
+    for observationStation in observationStations:
+        [long, lat] = observationStation["geometry"]["coordinates"]
+        dist = math.sqrt(
+            (lat - location.latitude) ** 2 + (long - location.longitude) ** 2
+        )
+
+        if not best or dist < best_dist:
+            best = observationStation["properties"]["stationIdentifier"]
+            best_dist = dist
+
+    if not best:
+        return None
+
+    # Get observations for the past day
+    now = datetime.now(pytz.timezone(properties["timeZone"]))
+    startOfDay = now.strftime("%Y-%m-%dT00:00:00%z")
+
+    observationsResponse = requests.get(
+        f"https://api.weather.gov/stations/{best}/observations/",
+        params={"start": startOfDay},
+    )
+
+    observations = None
+
+    if 200 >= observationsResponse.status_code >= 299:
+        return None
+
+    try:
+        observations = observationsResponse.json()["features"]
+    except:
+        return None
+
+    # Handle edge case where there hasn't been on yet (like if we are at 12AM)
+    # by getting latest observation
+    if len(observations) <= 0:
+        latestObservationsResponse = requests.get(
+            f"https://api.weather.gov/stations/{best}/observations/latest/"
+        )
+
+        if 200 >= latestObservationsResponse.status_code >= 299:
+            return None
+
+        try:
+            observations = [latestObservationsResponse.json()]
+        except:
+            return None
+
+    # Remap observations to their properties
+    observations = list(map(lambda x: x["properties"], observations))
+
+    currentTemp = None
+    minTemp = None
+
+    for observation in observations:
+        # Parse the units out
+        inUnit = observation["temperature"]["unitCode"].split(":")[1].replace("deg", "")
+        toUnit = dailyForecast[0]["temperatureUnit"]
+
+        thisTemp = pytemp(observation["temperature"]["value"], inUnit, toUnit)
+        if not minTemp or thisTemp < minTemp:
+            minTemp = thisTemp
+
+        if not currentTemp:
+            currentTemp = thisTemp
+
+    return {
+        "min": minTemp,
+        "current": currentTemp,
+    }
+
+
 # Generates the weather report from the properties and forecasts
-def generate_response(properties, dailyForecast, hourlyForecast):
+def generate_response(properties, dailyForecast, hourlyForecast, last24Hours):
     # High and low temperature
     highTemperature = ""
     lowTemperature = ""
@@ -152,7 +245,9 @@ def weather(location):
     if not hourlyForecast:
         return Response(status=500)
 
-    return generate_response(properties, dailyForecast, hourlyForecast)
+    last24Hours = get_last_24_hours(properties, dailyForecast, geolocation)
+
+    return generate_response(properties, dailyForecast, hourlyForecast, last24Hours)
 
 
 if __name__ == "__main__":  # Run app
