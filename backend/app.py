@@ -34,27 +34,27 @@ def get_properties(geolocation: Location):
 
 
 # Gets daily forecast from properties
+def get_weekly_forecast(properties):
+    weeklyForecastResponse = requests.get(properties["forecast"])
+
+    if 200 >= weeklyForecastResponse.status_code >= 299:
+        return None
+
+    try:
+        return weeklyForecastResponse.json()["properties"]["periods"]
+    except:
+        return None
+
+
+# Gets the hourly forecast from properties
 def get_daily_forecast(properties):
-    dailyForecastResponse = requests.get(properties["forecast"])
+    dailyForecastResponse = requests.get(properties["forecastHourly"])
 
     if 200 >= dailyForecastResponse.status_code >= 299:
         return None
 
     try:
         return dailyForecastResponse.json()["properties"]["periods"]
-    except:
-        return None
-
-
-# Gets the hourly forecast from properties
-def get_hourly_forecast(properties):
-    hourlyForecastResponse = requests.get(properties["forecastHourly"])
-
-    if 200 >= hourlyForecastResponse.status_code >= 299:
-        return None
-
-    try:
-        return hourlyForecastResponse.json()["properties"]["periods"]
     except:
         return None
 
@@ -235,19 +235,19 @@ def weather(location):
 
     timezone = properties["timeZone"]
 
+    weeklyForecast = get_weekly_forecast(properties)
+
+    if not weeklyForecast:
+        return Response(status=500)
+
     dailyForecast = get_daily_forecast(properties)
 
     if not dailyForecast:
         return Response(status=500)
 
-    hourlyForecast = get_hourly_forecast(properties)
+    last24Hours = get_last_24_hours(properties, weeklyForecast, geolocation)
 
-    if not hourlyForecast:
-        return Response(status=500)
-
-    last24Hours = get_last_24_hours(properties, dailyForecast, geolocation)
-
-    return generate_response(properties, dailyForecast, hourlyForecast, last24Hours)
+    return generate_response(properties, weeklyForecast, dailyForecast, last24Hours)
 
 
 if __name__ == "__main__":  # Run app
