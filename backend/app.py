@@ -216,8 +216,8 @@ def generate_response(properties, weeklyForecast, dailyForecast, last24Hours):
     )
 
 
-# Based on location, find:
-@app.route("/<location>")
+# Requests weather data for a location
+@app.route("/weather/<location>")
 def weather(location):
     # Define latitude and longitude using coordinates(location) function
     geolocation = location_to_geolocation(location)
