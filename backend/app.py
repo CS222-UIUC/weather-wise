@@ -216,6 +216,19 @@ def generate_response(properties, weeklyForecast, dailyForecast, last24Hours):
     )
 
 
+@app.route("/")
+def status():
+    return Response(
+        json.dumps(
+            {
+                "status": 200,
+                "message": "OK",
+            }
+        ),
+        200,
+    )
+
+
 # Requests weather data for a location
 @app.route("/weather/<location>")
 def weather(location):
