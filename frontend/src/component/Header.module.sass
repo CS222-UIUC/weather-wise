@@ -1,12 +1,5 @@
 @import ../constants
 
-@keyframes Header-logo-spin
-    from
-        transform: rotate(0deg)
-
-    to
-        transform: rotate(360deg)
-
 .Header
     font-size: $font-size-title
     background: linear-gradient(rgba(255, 255, 255, 0.125), rgba(255, 255, 255, 0))
@@ -14,12 +7,14 @@
 
     display: flex
     align-items: center
+    justify-items: center
 
 .logo
     height: $font-size-title
     pointer-events: none
-    @media (prefers-reduced-motion: no-preference)
-        animation: Header-logo-spin infinite 20s linear
+    width: 2rem
+    height: 2rem
+    padding: 0.5rem
 
 .title
     font-size: $font-size-title

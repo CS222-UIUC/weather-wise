@@ -5,9 +5,8 @@ type MyProps = { city: string; onSubmit: (params: string) => string }
 export default class LocationSearch extends React.Component<MyProps> {
     render() {
         return (
-            <div>
+            <div className={styles.LocationSearch}>
                 <input
-                    className={styles.LocationSearch}
                     placeholder='Search for weather at...'
                     onKeyDown={(e) => {
                         if (e.key === 'Enter') {
@@ -16,7 +15,7 @@ export default class LocationSearch extends React.Component<MyProps> {
                         }
                     }}
                 ></input>
-                <p>{this.props.city}</p>
+                <p>Showing weather for: {this.props.city}</p>
             </div>
         )
     }

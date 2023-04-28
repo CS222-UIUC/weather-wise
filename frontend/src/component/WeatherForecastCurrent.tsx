@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 
 import WeatherPanel from './WeatherPanel'
 import icons from './WeatherIcon.module.sass'
 import styles from './WeatherForecastCurrent.module.sass'
-import { NULL } from 'sass'
+import { TodayData } from 'src/data/WeatherReport'
 
 const CLOUDY = 'images/cloudy.png'
 const PARTLY_CLOUDY = 'images/partly_cloudy.png'
@@ -12,9 +12,19 @@ const SNOWY = 'images/snowy.png'
 const STORMY = 'images/stormy.png'
 const SUNNY = 'images/sunny.png'
 //, high: string, low: string, weather: string
-type MyProps = { city: string; unit: string; data: string[] }
-type MyState = { current_temp: number }
-export default class WFC extends React.Component<MyProps, MyState> {
+interface MyProps {
+    unit: string
+    data: TodayData
+}
+
+type MyState = {
+    current_temp: number
+}
+
+export default class WeatherForecastCurrent extends React.Component<
+    MyProps,
+    MyState
+> {
     getImage(current_weather: string) {
         if (current_weather === 'cloudy') return <img src={CLOUDY}></img>
         if (current_weather === 'partly_cloudy')
@@ -24,28 +34,25 @@ export default class WFC extends React.Component<MyProps, MyState> {
         if (current_weather === 'stormy') return <img src={STORMY}></img>
         if (current_weather === 'sunny') return <img src={SUNNY}></img>
     }
+
     render() {
-        const today = new Map<string, string>()
-        for (const value in this.props.data) {
-            today.set(value, this.props.data[value] as string)
-        }
+        const today = this.props.data
         return (
             <div className={styles.WeatherForecastCurrent}>
                 <div className={styles.column}>
                     <div className={styles.row}>
-                        {today.get('current')}°{this.props.unit}
+                        {today.current}°{this.props.unit}
                     </div>
                     <div className={styles.row}>
-                        H:{today.get('high')}°, L:{today.get('low')}°
+                        {today.high}°{this.props.unit} / {today.low}°
+                        {this.props.unit}
                     </div>
                 </div>
                 <div className={icons.WeatherIcon}>
                     {this.getImage('snowy')}
                 </div>
                 <div className={styles.WeatherForecastCurrent}>
-                    <div className={styles.column}>
-                        {today.get('shortForecast')}
-                    </div>
+                    <div className={styles.column}>{today.shortForecast}</div>
                 </div>
             </div>
         )

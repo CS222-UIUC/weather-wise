@@ -1,2 +1,16 @@
+@import ../constants
+
 .WeatherForecastHourly
-    height: 5rem
+    min-height: $square-panel-size
+
+    display: flex
+    flex-wrap: wrap
+    flex-direction: row
+
+    > div
+        height: $square-panel-size
+        width: $square-panel-size
+        text-align: center
+        display: flex
+        flex-direction: column
+        justify-content: center

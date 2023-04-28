@@ -6,35 +6,24 @@ import WeatherForecastCurrent from './WeatherForecastCurrent'
 import WeatherForecastHourly from './WeatherForecastHourly'
 import WeatherForecastDaily from './WeatherForecastDaily'
 import WeatherWarnings from './WeatherWarnings'
+import WeatherReport from 'src/data/WeatherReport'
 
 export default function Content() {
     const [city, setCity] = useState('chicago')
-    const [data, setdata] = useState([])
+    const [report, setData] = useState<WeatherReport | null>(null)
     useEffect(() => {
         fetch('/weather/' + city)
             .then((res) => {
                 if (res.ok) {
                     return res.json()
                 } else {
-                    console.log('JSON not okay')
+                    return null
                 }
             })
             .then((data) => {
-                setdata(data)
+                setData(data)
             })
     }, [city])
-    const map = new Map<string, string[]>()
-    for (const value in data) {
-        map.set(value, data[value])
-    }
-    //console.log(data)
-    let unit = 'no unit found'
-    if (typeof map.get('unit') !== 'undefined') {
-        unit =
-            (map.get('unit') as string[]).length < 1
-                ? 'K'
-                : (map.get('unit') as string[])[0]
-    }
 
     return (
         <div className={styles.Content}>
@@ -47,20 +36,29 @@ export default function Content() {
                             return param
                         }}
                     />
-                    <WeatherWarnings data={map.get('today') as string[]} />
+                    {report && (
+                        <WeatherWarnings
+                            forecast={report.today.detailedForecast}
+                        />
+                    )}
                 </div>
                 <div className={styles.column}>
-                    <WeatherForecastCurrent
-                        city={city}
-                        unit={unit}
-                        data={map.get('today') as string[]}
-                    />
-                    <WeatherForecastHourly
-                        data={map.get('daily') as string[]}
-                    />
-                    <WeatherForecastDaily
-                        data={map.get('weekly') as string[]}
-                    />
+                    {report && (
+                        <>
+                            <WeatherForecastCurrent
+                                unit={report.unit}
+                                data={report.today}
+                            />
+                            <WeatherForecastHourly
+                                unit={report.unit}
+                                forecast={report.daily}
+                            />
+                            <WeatherForecastDaily
+                                unit={report.unit}
+                                forecast={report.weekly}
+                            />
+                        </>
+                    )}
                 </div>
             </div>
         </div>

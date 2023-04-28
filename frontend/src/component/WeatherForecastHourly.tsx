@@ -3,38 +3,39 @@ import React from 'react'
 import WeatherPanel from './WeatherPanel'
 
 import styles from './WeatherForecastHourly.module.sass'
+import { HourForecast } from 'src/data/WeatherReport'
 
-type MyProps = { data: string[] }
+type MyProps = {
+    unit: string
+    forecast: Array<HourForecast>
+}
+
+function convertHour(hour: number) {
+    if (hour == 0) {
+        return '12 AM'
+    }
+    if (hour == 12) {
+        return '12 PM'
+    }
+    if (hour < 12) {
+        return `${hour} AM`
+    }
+
+    return `${hour - 12} PM`
+}
 
 export default class WeatherForecastHourly extends React.Component<MyProps> {
-    getFormattedString(forecast: Map<string, Map<string, string>>) {
-        let to_return = ''
-        for (let i = 0; i < 24; i++) {
-            to_return +=
-                forecast.get(i.toString())?.get('hour') +
-                ': ' +
-                forecast.get(i.toString())?.get('temperature') +
-                '°  '
-        }
-        return to_return
-    }
     render() {
-        // console.log(forecastJSON.hour)
-        const forecast = new Map<string, Map<string, string>>()
-        let i = 0
-        for (const value in this.props.data) {
-            const details = new Map<string, string>()
-            const arr = this.props.data[value] as any
-            for (const value2 in arr) {
-                details.set(value2, arr[value2])
-            }
-            forecast.set(i.toString(), details)
-            i++
-        }
-        //console.log(forecast)
         return (
             <WeatherPanel className={styles.WeatherForecastHourly}>
-                {this.getFormattedString(forecast)}
+                {this.props.forecast.map((hourForecast, i) => (
+                    <div key={i}>
+                        <p>{convertHour(hourForecast.hour)}</p>
+                        <p>
+                            {hourForecast.temperature}°{this.props.unit}
+                        </p>
+                    </div>
+                ))}
             </WeatherPanel>
         )
     }
