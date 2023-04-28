@@ -11,12 +11,6 @@ import math
 geolocator = Nominatim(user_agent="weather-app", timeout=10)
 app = Flask(__name__)
 
-# Convert location to latitude and longitude coordinates using geopy
-def coordinates(location):
-    geolocator = Nominatim(user_agent="app", timeout=10)
-    location = geolocator.geocode(location)
-    locations = [location.latitude, location.longitude]
-    return locations
 
 # Convert location to latitude and longitude coordinates using geopy
 def location_to_geolocation(location):
