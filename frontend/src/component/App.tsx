@@ -7,7 +7,6 @@ import Content from './Content'
 import Footer from './Footer'
 
 function App() {
-    
     return (
         <div className={styles.App}>
             <Helmet>

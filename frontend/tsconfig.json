@@ -18,9 +18,9 @@
         "jsx": "react-jsx",
         "plugins": [
             {
-                "name": "typescript-plugin-css-modules", 
+                "name": "typescript-plugin-css-modules",
                 "options": {
-                    "customMatcher": "\\.module\\.sass$",
+                    "customMatcher": "\\.module\\.sass$"
                 }
             }
         ]

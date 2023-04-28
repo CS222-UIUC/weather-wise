@@ -7,7 +7,7 @@ export default function HistoryGraph() {
         <div className={styles.HistoryGraph}>
             <h1>Graph Title</h1>
             <p>In theory, a graph. Instead, some cats.</p>
-            <img src="res/cats.jpg"></img>
+            <img src='res/cats.jpg'></img>
         </div>
     )
 }
