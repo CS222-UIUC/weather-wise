@@ -9,47 +9,47 @@ import WeatherForecastDaily from './WeatherForecastDaily'
 import WeatherWarnings from './WeatherWarnings'
 
 export default function Content() {
+    const [city,setCity] = useState("chicago")
     const [data, setdata] = useState([])
     useEffect( () => {
-        fetch("/chicago").then(
+        fetch("/weather/" + city).then(
             res => {
                 if (res.ok){
                     return res.json()
                 }
                 else{
-                    console.log("uh oh")
+                    console.log("JSON not okay")
                 }
             }).then(
                 data => {
                     setdata(data)
-                    //this.data.current_temp = data.current
-                    console.log(data.current)
                 }
             )
-    },[])
-    const map = new Map<string, string>();
+    },[city])
+    const map = new Map<string, string[]>();
     for (const value in data) {
     map.set(value, data[value]);
     }
-    console.log(data)
+    //console.log(data)
+    let unit = "no unit found"
+    if (typeof(map.get("unit")) !== "undefined")  {
+        unit = (map.get("unit") as string[]).length < 1 ? "K" : (map.get("unit") as string[])[0]
+    }
+
     return (
-        <div className={styles.Content}  onClick={() => {console.log(map.get("today")); setData()}}>
+        <div className={styles.Content} >
             <div className={styles.columns}>
                 <div className={styles.column}>
-                    <LocationSearch />
+                    <LocationSearch city={city} onSubmit={(param: string) => {setCity(param); return param}}/>
                     <HistoryGraph />
                 </div>
                 <div className={styles.column}>
-                    <WeatherForecastCurrent city={'chicago'} current_temp={map.get("current") as string}/>
-                    <WeatherForecastHourly />
-                    <WeatherForecastDaily />
+                    <WeatherForecastCurrent city={city} unit={unit} data={map.get("today") as string[]}/>
+                    <WeatherForecastHourly data={map.get("daily") as string[]}/>
+                    <WeatherForecastDaily data={map.get("weekly") as string[]}/>
                 </div>
             </div>
-            <WeatherWarnings />
+            <WeatherWarnings data={map.get("today") as string[]}/>
         </div>
     )
-}
-
-function setData(){
-    console.log("hgere")
 }
