@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react'
 
 import styles from './Content.module.sass'
 import LocationSearch from './LocationSearch'
-import HistoryGraph from './HistoryGraph'
 import WeatherForecastCurrent from './WeatherForecastCurrent'
 import WeatherForecastHourly from './WeatherForecastHourly'
 import WeatherForecastDaily from './WeatherForecastDaily'
@@ -48,7 +47,7 @@ export default function Content() {
                             return param
                         }}
                     />
-                    <HistoryGraph />
+                    <WeatherWarnings data={map.get('today') as string[]} />
                 </div>
                 <div className={styles.column}>
                     <WeatherForecastCurrent
@@ -64,7 +63,6 @@ export default function Content() {
                     />
                 </div>
             </div>
-            <WeatherWarnings data={map.get('today') as string[]} />
         </div>
     )
 }
