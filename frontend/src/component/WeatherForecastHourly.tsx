@@ -31,9 +31,7 @@ export default class WeatherForecastHourly extends React.Component<MyProps> {
                 {this.props.forecast.map((hourForecast, i) => (
                     <div key={i}>
                         <p>{convertHour(hourForecast.hour)}</p>
-                        <p>
-                            {hourForecast.temperature}°{this.props.unit}
-                        </p>
+                        <p>{hourForecast.temperature}°</p>
                     </div>
                 ))}
             </WeatherPanel>

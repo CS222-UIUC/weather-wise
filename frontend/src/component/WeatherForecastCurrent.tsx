@@ -39,21 +39,25 @@ export default class WeatherForecastCurrent extends React.Component<
         const today = this.props.data
         return (
             <div className={styles.WeatherForecastCurrent}>
-                <div className={styles.column}>
-                    <div className={styles.row}>
-                        {today.current}°{this.props.unit}
+                <div>
+                    <div className={styles.column}>
+                        <div className={styles.row}>{today.current}°</div>
+                        <div className={styles.row}>
+                            {today.high}° / {today.low}°
+                        </div>
                     </div>
-                    <div className={styles.row}>
-                        {today.high}°{this.props.unit} / {today.low}°
-                        {this.props.unit}
+                    <div className={icons.WeatherIcon}>
+                        {this.getImage('snowy')}
+                    </div>
+                    <div className={styles.WeatherForecastCurrent}>
+                        <div className={styles.column}>
+                            {today.shortForecast}
+                        </div>
                     </div>
                 </div>
-                <div className={icons.WeatherIcon}>
-                    {this.getImage('snowy')}
-                </div>
-                <div className={styles.WeatherForecastCurrent}>
-                    <div className={styles.column}>{today.shortForecast}</div>
-                </div>
+                <p className={styles.notice}>
+                    All temperatures are measured in °{this.props.unit}
+                </p>
             </div>
         )
     }
