@@ -145,7 +145,12 @@ def get_last_24_hours(properties, dailyForecast, location: Location):
         inUnit = observation["temperature"]["unitCode"].split(":")[1].replace("deg", "")
         toUnit = dailyForecast[0]["temperatureUnit"]
 
-        thisTemp = pytemp(observation["temperature"]["value"], inUnit, toUnit)
+        fromTemp = observation["temperature"]["value"]
+
+        if not fromTemp:
+            continue
+
+        thisTemp = pytemp(fromTemp, inUnit, toUnit)
         if not minTemp or thisTemp < minTemp:
             minTemp = thisTemp
 
@@ -264,6 +269,9 @@ def weather(location):
         return Response(status=500)
 
     last24Hours = get_last_24_hours(properties, weeklyForecast, geolocation)
+
+    if not last24Hours:
+        return Response(status=500)
 
     return generate_response(properties, weeklyForecast, dailyForecast, last24Hours)
 
