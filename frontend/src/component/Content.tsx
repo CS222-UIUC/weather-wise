@@ -7,12 +7,31 @@ import WeatherForecastHourly from './WeatherForecastHourly'
 import WeatherForecastDaily from './WeatherForecastDaily'
 import WeatherWarnings from './WeatherWarnings'
 import WeatherReport from 'src/data/WeatherReport'
+import { USE_LOCAL_LOCATION } from 'src/constants'
+
+function getLocalLocation(): Promise<string> {
+    return new Promise<GeolocationPosition>((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(
+            (position) => resolve(position),
+            (error) => reject(error)
+        )
+    }).then((position) => {
+        return `(${position.coords.latitude},${position.coords.longitude})`
+    })
+}
 
 export default function Content() {
-    const [city, setCity] = useState('chicago')
+    const [city, setCity] = useState(USE_LOCAL_LOCATION)
     const [report, setData] = useState<WeatherReport | null>(null)
     useEffect(() => {
-        fetch('/weather/' + city)
+        new Promise((resolve, reject) => {
+            if (city != USE_LOCAL_LOCATION) {
+                return resolve(city)
+            }
+
+            getLocalLocation().then(resolve).catch(reject)
+        })
+            .then((location) => fetch('/weather/' + location))
             .then((res) => {
                 if (res.ok) {
                     return res.json()
@@ -20,9 +39,8 @@ export default function Content() {
                     return null
                 }
             })
-            .then((data) => {
-                setData(data)
-            })
+            .then((data) => setData(data))
+            .catch(() => setData(null))
     }, [city])
 
     return (
