@@ -32,7 +32,7 @@ def get_properties(geolocation: Location):
     )
     propertiesResponse = requests.get(propertiesUrl)
 
-    if 200 >= propertiesResponse.status_code >= 299:
+    if 200 <= propertiesResponse.status_code <= 299:
         return None
 
     try:
@@ -45,7 +45,7 @@ def get_properties(geolocation: Location):
 def get_weekly_forecast(properties):
     weeklyForecastResponse = requests.get(properties["forecast"])
 
-    if 200 >= weeklyForecastResponse.status_code >= 299:
+    if 200 <= weeklyForecastResponse.status_code <= 299:
         return None
 
     try:
@@ -58,7 +58,7 @@ def get_weekly_forecast(properties):
 def get_daily_forecast(properties):
     dailyForecastResponse = requests.get(properties["forecastHourly"])
 
-    if 200 >= dailyForecastResponse.status_code >= 299:
+    if 200 <= dailyForecastResponse.status_code <= 299:
         return None
 
     try:
@@ -73,7 +73,7 @@ def get_last_24_hours(properties, dailyForecast, location: Location):
     # Get all observation stations
     observationStationsResponse = requests.get(properties["observationStations"])
 
-    if 200 >= observationStationsResponse.status_code >= 299:
+    if 200 <= observationStationsResponse.status_code <= 299:
         return None
 
     observationStations = None
@@ -111,7 +111,7 @@ def get_last_24_hours(properties, dailyForecast, location: Location):
             params={"start": startOfDay},
         )
 
-        if 200 >= observationsResponse.status_code >= 299:
+        if 200 <= observationsResponse.status_code <= 299:
             return None
 
         try:
@@ -129,7 +129,7 @@ def get_last_24_hours(properties, dailyForecast, location: Location):
             f"https://api.weather.gov/stations/{stationsWithDistance[0]}/observations/latest/"
         )
 
-        if 200 >= latestObservationsResponse.status_code >= 299:
+        if 200 <= latestObservationsResponse.status_code <= 299:
             return None
 
         try:
