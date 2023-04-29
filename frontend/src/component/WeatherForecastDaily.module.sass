@@ -1,2 +1,27 @@
+@import ../constants
+
 .WeatherForecastDaily
-    min-height: 5rem
+    display: flex
+    flex-wrap: wrap
+
+    > div
+        position: relative
+        width: $square-panel-size-large
+        height: $square-panel-size-large
+        display: flex
+        flex-direction: column
+        text-align: center
+        justify-content: center
+
+        > p
+            z-index: 1
+
+        > img
+            position: absolute
+            top: 50%
+            left: 50%
+            transform: translate(-50%, -50%)
+            width: calc($square-panel-size-large * 0.75)
+            height: calc($square-panel-size-large * 0.75)
+            opacity: 0.5
+            z-index: 0
