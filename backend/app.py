@@ -3,6 +3,7 @@ import json
 from datetime import datetime, timedelta
 import pytz
 from flask import Flask, jsonify, Response
+import geopy.location
 from geopy.location import Location
 from geopy.geocoders import Nominatim
 from pytemp import pytemp
@@ -13,7 +14,14 @@ app = Flask(__name__)
 
 
 # Convert location to latitude and longitude coordinates using geopy
-def location_to_geolocation(location):
+def location_to_geolocation(location: str) -> Location:
+    if location.startswith("(") and location.endswith(")"):
+        splits = location.replace("(", "").replace(")", "").split(",")
+
+        if len(splits) == 2:
+            point = geopy.location.Point(float(splits[0]), float(splits[1]), -1)
+            return Location(location, point, {"sorry_this_is_filler_data": True})
+
     return geolocator.geocode(query=location, exactly_one=True)
 
 
