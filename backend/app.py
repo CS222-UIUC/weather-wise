@@ -83,47 +83,50 @@ def get_last_24_hours(properties, dailyForecast, location: Location):
     except:
         return None
 
-    # Get the observation station closest to us
-    best = None
-    best_dist = None
-
-    for observationStation in observationStations:
-        [long, lat] = observationStation["geometry"]["coordinates"]
-        dist = math.sqrt(
+    # Get the observation stations, sorted by how close they are
+    def get_distance(station):
+        [long, lat] = station["geometry"]["coordinates"]
+        return math.sqrt(
             (lat - location.latitude) ** 2 + (long - location.longitude) ** 2
         )
 
-        if not best or dist < best_dist:
-            best = observationStation["properties"]["stationIdentifier"]
-            best_dist = dist
-
-    if not best:
-        return None
+    stationsWithDistance = map(
+        lambda station: (
+            station["properties"]["stationIdentifier"],
+            get_distance(station),
+        ),
+        observationStations,
+    )
+    stationsWithDistance = sorted(stationsWithDistance, key=lambda x: x[1])
 
     # Get observations for the past day
     now = datetime.now(pytz.timezone(properties["timeZone"]))
     startOfDay = now.strftime("%Y-%m-%dT00:00:00%z")
 
-    observationsResponse = requests.get(
-        f"https://api.weather.gov/stations/{best}/observations/",
-        params={"start": startOfDay},
-    )
-
     observations = None
 
-    if 200 >= observationsResponse.status_code >= 299:
-        return None
+    for station, _ in stationsWithDistance:
+        observationsResponse = requests.get(
+            f"https://api.weather.gov/stations/{station}/observations/",
+            params={"start": startOfDay},
+        )
 
-    try:
-        observations = observationsResponse.json()["features"]
-    except:
-        return None
+        if 200 >= observationsResponse.status_code >= 299:
+            return None
+
+        try:
+            observations = observationsResponse.json()["features"]
+        except:
+            return None
+
+        if len(observations) > 0:
+            break
 
     # Handle edge case where there hasn't been on yet (like if we are at 12AM)
     # by getting latest observation
-    if len(observations) <= 0:
+    if observations is None or len(observations) <= 0:
         latestObservationsResponse = requests.get(
-            f"https://api.weather.gov/stations/{best}/observations/latest/"
+            f"https://api.weather.gov/stations/{stationsWithDistance[0]}/observations/latest/"
         )
 
         if 200 >= latestObservationsResponse.status_code >= 299:
