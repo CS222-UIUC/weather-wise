@@ -44,6 +44,7 @@ def get_properties(geolocation: Location):
 # Gets daily forecast from properties
 def get_weekly_forecast(properties):
     weeklyForecastResponse = requests.get(properties["forecast"])
+    print(weeklyForecastResponse.url)
 
     if 200 >= weeklyForecastResponse.status_code >= 299:
         return None
@@ -116,6 +117,15 @@ def get_last_24_hours(properties, dailyForecast, location: Location):
 
         try:
             observations = observationsResponse.json()["features"]
+            observations = list(
+                filter(
+                    lambda observation: observation["properties"]["temperature"][
+                        "value"
+                    ]
+                    is not None,
+                    observations,
+                )
+            )
         except:
             return None
 
