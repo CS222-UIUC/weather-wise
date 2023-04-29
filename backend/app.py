@@ -139,6 +139,7 @@ def get_last_24_hours(properties, dailyForecast, location: Location):
 
     currentTemp = None
     minTemp = None
+    maxTemp = None
 
     for observation in observations:
         # Parse the units out
@@ -154,12 +155,16 @@ def get_last_24_hours(properties, dailyForecast, location: Location):
         if not minTemp or thisTemp < minTemp:
             minTemp = thisTemp
 
+        if not maxTemp or thisTemp > maxTemp:
+            maxTemp = thisTemp
+
         if not currentTemp:
             currentTemp = thisTemp
 
     return {
         "low": math.floor(minTemp),
         "current": math.floor(currentTemp),
+        "high": math.floor(maxTemp),
     }
 
 
@@ -175,7 +180,7 @@ def generate_response(properties, weeklyForecast, dailyForecast, last24Hours):
 
     # Generate today part
     today = {
-        "high": firstPeriodOfWeek["temperature"],
+        "high": max(firstPeriodOfWeek["temperature"], last24Hours["high"]),
         "low": min(firstPeriodOfWeek["temperature"], last24Hours["low"]),
         "current": last24Hours["current"],
         "shortForecast": firstPeriodOfWeek["shortForecast"],
