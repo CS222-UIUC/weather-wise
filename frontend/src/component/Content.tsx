@@ -8,6 +8,8 @@ import WeatherForecastDaily from './WeatherForecastDaily'
 import WeatherWarnings from './WeatherWarnings'
 import WeatherReport from 'src/data/WeatherReport'
 import { USE_LOCAL_LOCATION } from 'src/constants'
+import HistoryGraph from './HistoryGraph'
+
 
 function getLocalLocation(): Promise<string> {
     return new Promise<GeolocationPosition>((resolve, reject) => {
@@ -55,10 +57,18 @@ export default function Content() {
                         }}
                     />
                     {report && (
-                        <WeatherWarnings
-                            forecast={report.today.detailedForecast}
-                        />
+                        <>
+                            <WeatherWarnings
+                                forecast={report.today.detailedForecast}
+                                data={report.today}
+                            />
+                            <HistoryGraph 
+                                unit={report.unit}
+                                data={report.today}
+                            />
+                        </>
                     )}
+                    
                 </div>
                 <div className={styles.column}>
                     {report && (

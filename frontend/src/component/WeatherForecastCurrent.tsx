@@ -29,7 +29,7 @@ export default class WeatherForecastCurrent extends React.Component<
                             {today.current}°
                         </div>
                         <div className={styles.row + ' ' + styles.highLow}>
-                            {today.high}° / {today.low}°
+                            {Math.max(today.high, today.current)}° / {Math.min(today.low, today.current)}°
                         </div>
                     </div>
                     <div className={styles.icon}>
