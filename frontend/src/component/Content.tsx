@@ -21,26 +21,55 @@ function getLocalLocation(): Promise<string> {
     })
 }
 
+function getPrettyCity(city: string): string {
+    return city == USE_LOCAL_LOCATION ? 'your location' : city
+}
+
 export default function Content() {
     const [city, setCity] = useState(USE_LOCAL_LOCATION)
+    const [status, setStatus] = useState('')
     const [report, setData] = useState<WeatherReport | null>(null)
     useEffect(() => {
         new Promise((resolve, reject) => {
+            setStatus('Loading...')
             if (city != USE_LOCAL_LOCATION) {
                 return resolve(city)
             }
 
-            getLocalLocation().then(resolve).catch(reject)
+            getLocalLocation()
+                .then(resolve)
+                .catch((error) => {
+                    setStatus('Permissions for local location denied')
+                    reject(error)
+                })
         })
             .then((location) => fetch('/weather/' + location))
             .then((res) => {
                 if (res.ok) {
                     return res.json()
                 } else {
+                    if (res.status == 404) {
+                        setStatus(
+                            `Couldn't find weather information for: ${getPrettyCity(
+                                city
+                            )}`
+                        )
+                    } else {
+                        setStatus(
+                            `Failed to get weather information for: ${getPrettyCity(
+                                city
+                            )}`
+                        )
+                    }
                     return null
                 }
             })
-            .then((data) => setData(data))
+            .then((data) => {
+                if (data) {
+                    setStatus(`Showing weather for: ${getPrettyCity(city)}`)
+                }
+                setData(data)
+            })
             .catch(() => setData(null))
     }, [city])
 
@@ -50,6 +79,7 @@ export default function Content() {
                 <div className={styles.column}>
                     <LocationSearch
                         city={city}
+                        status={status}
                         onSubmit={(param: string) => {
                             setCity(param)
                             return param

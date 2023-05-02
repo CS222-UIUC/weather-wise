@@ -2,10 +2,15 @@ import React from 'react'
 import { USE_LOCAL_LOCATION } from 'src/constants'
 
 import styles from './LocationSearch.module.sass'
-type MyProps = { city: string; onSubmit: (params: string) => string }
+type MyProps = {
+    city: string
+    status: string
+    onSubmit: (params: string) => string
+}
 export default class LocationSearch extends React.Component<MyProps> {
     render() {
         const city = this.props.city
+        const status = this.props.status
         return (
             <div className={styles.LocationSearch}>
                 <input
@@ -18,10 +23,7 @@ export default class LocationSearch extends React.Component<MyProps> {
                     }}
                 ></input>
                 <div>
-                    <p>
-                        Showing weather for:{' '}
-                        {city == USE_LOCAL_LOCATION ? 'your location' : city}
-                    </p>
+                    {status && <p>{status}</p>}
                     {city == USE_LOCAL_LOCATION || (
                         <button
                             onClick={() => {
