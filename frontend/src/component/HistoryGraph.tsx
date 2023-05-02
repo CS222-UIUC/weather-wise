@@ -9,15 +9,15 @@ interface MyProps {
     data: TodayData
 }
 
-export default class HistoryGraph extends React.Component<
-MyProps
-> {
-    render(){
+export default class HistoryGraph extends React.Component<MyProps> {
+    render() {
         const today = this.props.data
         return (
             <div className={styles.HistoryGraph}>
                 <h1>Related Climate Change Data</h1>
-                <img src={GetClimateChangeImageSrcFor(today.shortForecast)}></img>
+                <img
+                    src={GetClimateChangeImageSrcFor(today.shortForecast)}
+                ></img>
             </div>
         )
     }

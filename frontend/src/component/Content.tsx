@@ -10,7 +10,6 @@ import WeatherReport from 'src/data/WeatherReport'
 import { USE_LOCAL_LOCATION } from 'src/constants'
 import HistoryGraph from './HistoryGraph'
 
-
 function getLocalLocation(): Promise<string> {
     return new Promise<GeolocationPosition>((resolve, reject) => {
         navigator.geolocation.getCurrentPosition(
@@ -62,13 +61,12 @@ export default function Content() {
                                 forecast={report.today.detailedForecast}
                                 data={report.today}
                             />
-                            <HistoryGraph 
+                            <HistoryGraph
                                 unit={report.unit}
                                 data={report.today}
                             />
                         </>
                     )}
-                    
                 </div>
                 <div className={styles.column}>
                     {report && (

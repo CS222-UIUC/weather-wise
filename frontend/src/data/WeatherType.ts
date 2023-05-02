@@ -12,37 +12,37 @@ export const WeatherTypeData = {
         src: 'images/cloudy.png',
         words: ['cloud'],
         cc_src: 'images/climate-change-co2.png',
-        advice: ''
+        advice: '',
     },
     [WeatherType.PartlyCloudy]: {
         src: 'images/partly_cloudy.png',
         words: ['part cloud', 'partly cloud', 'some cloud'],
         cc_src: 'images/climate-change-partly-sunny.png',
-        advice: ''
+        advice: '',
     },
     [WeatherType.Rainy]: {
         src: 'images/rainy.png',
         words: ['rain', 'shower'],
         cc_src: 'images/climate-change-rainy.png',
-        advice: 'It is a bit rainy today, bring an umbrella!'
+        advice: 'It is a bit rainy today, bring an umbrella!',
     },
     [WeatherType.Snowy]: {
         src: 'images/snowy.png',
         words: ['snow', 'blizzard'],
         cc_src: 'images/climate-change-snowy.png',
-        advice: 'Brrrrr, make sure to wear a heavy coat, and maybe get yourself some hot chocolate!'
+        advice: 'Brrrrr, make sure to wear a heavy coat, and maybe get yourself some hot chocolate!',
     },
     [WeatherType.Stormy]: {
         src: 'images/stormy.png',
         words: ['storm', 'lightning', 'thunder', 'thunderstorm'],
         cc_src: 'images/climate-change-methane.png',
-        advice: 'Be careful! Bring an umbrella and some rainboots!'
+        advice: 'Be careful! Bring an umbrella and some rainboots!',
     },
     [WeatherType.Sunny]: {
         src: 'images/sunny.png',
         words: ['sunny', 'clear'],
         cc_src: 'images/climate-change-sunny.png',
-        advice: 'Enjoy the sunny weather!'
+        advice: 'Enjoy the sunny weather!',
     },
 }
 
@@ -68,7 +68,7 @@ export function GetImageSrcFor(forecast: string): string {
     return WeatherTypeData[WeatherType.Sunny].src
 }
 
-export function GetClimateChangeImageSrcFor(forecast: string): string{
+export function GetClimateChangeImageSrcFor(forecast: string): string {
     for (const weatherType of WeatherTypePriority) {
         const weatherTypeData = WeatherTypeData[weatherType]
         for (const word of weatherTypeData.words) {
@@ -80,7 +80,7 @@ export function GetClimateChangeImageSrcFor(forecast: string): string{
     return WeatherTypeData[WeatherType.Sunny].cc_src
 }
 
-export function GetAdvice(forecast: string): string{
+export function GetAdvice(forecast: string): string {
     for (const weatherType of WeatherTypePriority) {
         const weatherTypeData = WeatherTypeData[weatherType]
         for (const word of weatherTypeData.words) {
