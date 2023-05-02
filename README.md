@@ -1,11 +1,8 @@
-# The Weather App
-*name to be determined*
+# WeatherWise
+Get the current weather, anywhere, anytime!
 
-# About
-TODO
-
-# Usage
-TODO
+WeatherWise helps you make wise weather decisions by providing you with suggestions for the day ahead, 
+and showing you what to be prepared for throughout the day.
 
 # Development
 Please see [DEVELOPMENT.md](DEVELOPMENT.md) for setup instructions.
