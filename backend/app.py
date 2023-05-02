@@ -44,7 +44,6 @@ def get_properties(geolocation: Location):
 # Gets daily forecast from properties
 def get_weekly_forecast(properties):
     weeklyForecastResponse = requests.get(properties["forecast"])
-    print(weeklyForecastResponse.url)
 
     if 200 >= weeklyForecastResponse.status_code >= 299:
         return None
