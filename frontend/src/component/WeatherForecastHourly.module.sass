@@ -1,2 +1,23 @@
+@import ../constants
+
 .WeatherForecastHourly
-    height: 5rem
+    min-height: $square-panel-size-small
+
+    display: flex
+    flex-wrap: wrap
+    flex-direction: row
+    justify-content: center
+
+    > div
+        height: $square-panel-size-small
+        width: $square-panel-size-small
+        text-align: center
+        display: flex
+        flex-direction: column
+        justify-content: center
+
+        > p:first-child // The time
+            color: $text-color-light
+            font-size: $font-size-text-small
+        > p:last-child // The temperature
+            color: $text-color-main

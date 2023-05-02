@@ -1,13 +1,24 @@
 import React from 'react'
 
 import styles from './HistoryGraph.module.sass'
+import { GetWeatherTypeFor, WeatherTypeToMetadata } from 'src/data/WeatherType'
+import { TodayData } from 'src/data/WeatherReport'
 
-export default function HistoryGraph() {
-    return (
-        <div className={styles.HistoryGraph}>
-            <h1>Graph Title</h1>
-            <p>In theory, a graph. Instead, some cats.</p>
-            <img src="res/cats.jpg"></img>
-        </div>
-    )
+interface MyProps {
+    unit: string
+    data: TodayData
+}
+
+export default class HistoryGraph extends React.Component<MyProps> {
+    render() {
+        const today = this.props.data
+        const weatherType = GetWeatherTypeFor(today.shortForecast)
+        const weatherTypeMetadata = WeatherTypeToMetadata[weatherType]
+        return (
+            <div className={styles.HistoryGraph}>
+                <h1>Related Climate Change Data</h1>
+                <img src={weatherTypeMetadata.cc_src}></img>
+            </div>
+        )
+    }
 }

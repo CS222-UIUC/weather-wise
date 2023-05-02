@@ -3,6 +3,7 @@ import json
 from datetime import datetime, timedelta
 import pytz
 from flask import Flask, jsonify, Response
+import geopy.location
 from geopy.location import Location
 from geopy.geocoders import Nominatim
 from pytemp import pytemp
@@ -13,7 +14,14 @@ app = Flask(__name__)
 
 
 # Convert location to latitude and longitude coordinates using geopy
-def location_to_geolocation(location):
+def location_to_geolocation(location: str) -> Location:
+    if location.startswith("(") and location.endswith(")"):
+        splits = location.replace("(", "").replace(")", "").split(",")
+
+        if len(splits) == 2:
+            point = geopy.location.Point(float(splits[0]), float(splits[1]), -1)
+            return Location(location, point, {"sorry_this_is_filler_data": True})
+
     return geolocator.geocode(query=location, exactly_one=True)
 
 
@@ -75,47 +83,59 @@ def get_last_24_hours(properties, dailyForecast, location: Location):
     except:
         return None
 
-    # Get the observation station closest to us
-    best = None
-    best_dist = None
-
-    for observationStation in observationStations:
-        [long, lat] = observationStation["geometry"]["coordinates"]
-        dist = math.sqrt(
+    # Get the observation stations, sorted by how close they are
+    def get_distance(station):
+        [long, lat] = station["geometry"]["coordinates"]
+        return math.sqrt(
             (lat - location.latitude) ** 2 + (long - location.longitude) ** 2
         )
 
-        if not best or dist < best_dist:
-            best = observationStation["properties"]["stationIdentifier"]
-            best_dist = dist
-
-    if not best:
-        return None
+    stationsWithDistance = map(
+        lambda station: (
+            station["properties"]["stationIdentifier"],
+            get_distance(station),
+        ),
+        observationStations,
+    )
+    stationsWithDistance = sorted(stationsWithDistance, key=lambda x: x[1])
 
     # Get observations for the past day
     now = datetime.now(pytz.timezone(properties["timeZone"]))
     startOfDay = now.strftime("%Y-%m-%dT00:00:00%z")
 
-    observationsResponse = requests.get(
-        f"https://api.weather.gov/stations/{best}/observations/",
-        params={"start": startOfDay},
-    )
-
     observations = None
 
-    if 200 >= observationsResponse.status_code >= 299:
-        return None
+    for station, _ in stationsWithDistance:
+        observationsResponse = requests.get(
+            f"https://api.weather.gov/stations/{station}/observations/",
+            params={"start": startOfDay},
+        )
 
-    try:
-        observations = observationsResponse.json()["features"]
-    except:
-        return None
+        if 200 >= observationsResponse.status_code >= 299:
+            return None
+
+        try:
+            observations = observationsResponse.json()["features"]
+            observations = list(
+                filter(
+                    lambda observation: observation["properties"]["temperature"][
+                        "value"
+                    ]
+                    is not None,
+                    observations,
+                )
+            )
+        except:
+            return None
+
+        if len(observations) > 0:
+            break
 
     # Handle edge case where there hasn't been on yet (like if we are at 12AM)
     # by getting latest observation
-    if len(observations) <= 0:
+    if observations is None or len(observations) <= 0:
         latestObservationsResponse = requests.get(
-            f"https://api.weather.gov/stations/{best}/observations/latest/"
+            f"https://api.weather.gov/stations/{stationsWithDistance[0]}/observations/latest/"
         )
 
         if 200 >= latestObservationsResponse.status_code >= 299:
@@ -131,15 +151,24 @@ def get_last_24_hours(properties, dailyForecast, location: Location):
 
     currentTemp = None
     minTemp = None
+    maxTemp = None
 
     for observation in observations:
         # Parse the units out
         inUnit = observation["temperature"]["unitCode"].split(":")[1].replace("deg", "")
         toUnit = dailyForecast[0]["temperatureUnit"]
 
-        thisTemp = pytemp(observation["temperature"]["value"], inUnit, toUnit)
+        fromTemp = observation["temperature"]["value"]
+
+        if not fromTemp:
+            continue
+
+        thisTemp = pytemp(fromTemp, inUnit, toUnit)
         if not minTemp or thisTemp < minTemp:
             minTemp = thisTemp
+
+        if not maxTemp or thisTemp > maxTemp:
+            maxTemp = thisTemp
 
         if not currentTemp:
             currentTemp = thisTemp
@@ -147,6 +176,7 @@ def get_last_24_hours(properties, dailyForecast, location: Location):
     return {
         "low": math.floor(minTemp),
         "current": math.floor(currentTemp),
+        "high": math.floor(maxTemp),
     }
 
 
@@ -162,7 +192,7 @@ def generate_response(properties, weeklyForecast, dailyForecast, last24Hours):
 
     # Generate today part
     today = {
-        "high": firstPeriodOfWeek["temperature"],
+        "high": max(firstPeriodOfWeek["temperature"], last24Hours["high"]),
         "low": min(firstPeriodOfWeek["temperature"], last24Hours["low"]),
         "current": last24Hours["current"],
         "shortForecast": firstPeriodOfWeek["shortForecast"],
@@ -256,6 +286,9 @@ def weather(location):
         return Response(status=500)
 
     last24Hours = get_last_24_hours(properties, weeklyForecast, geolocation)
+
+    if not last24Hours:
+        return Response(status=500)
 
     return generate_response(properties, weeklyForecast, dailyForecast, last24Hours)
 

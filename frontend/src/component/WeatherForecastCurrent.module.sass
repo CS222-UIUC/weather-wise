@@ -3,16 +3,34 @@
 .WeatherForecastCurrent
     font-size: $font-size-header
 
-    display: flex
+    > div
+        display: flex
+        align-items: center
 
 .column
     display: flex
-    flex-grow: 1
-    flex-shrink: 1
-    flex-basis: 0
-
-    display: flex
+    // flex-grow: 1
+    // flex-shrink: 1
+    // flex-basis: 0
     flex-direction: column
 
 .row
-    margin: 0.5rem 0
+    margin: 0.125rem 0
+
+.current
+    font-size: $font-size-large
+
+.highLow
+    font-size: $font-size-header
+
+.icon
+    padding: 1rem
+
+    > img
+        width: $weather-icon-size
+        height: $weather-icon-size
+
+.notice
+    font-style: italic
+    font-size: $font-size-text
+    text-align: center
