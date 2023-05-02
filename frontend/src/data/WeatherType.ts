@@ -7,12 +7,18 @@ export enum WeatherType {
     Sunny,
 }
 
-export const WeatherTypeData = {
+export type WeatherTypeMetadata = {
+    src: string
+    words: string[]
+    cc_src: string
+    advice?: string
+}
+
+export const WeatherTypeToMetadata: Record<WeatherType, WeatherTypeMetadata> = {
     [WeatherType.Cloudy]: {
         src: 'images/cloudy.png',
         words: ['cloud'],
         cc_src: 'images/climate-change-co2.png',
-        advice: '',
     },
     [WeatherType.PartlyCloudy]: {
         src: 'images/partly_cloudy.png',
@@ -55,39 +61,15 @@ export const WeatherTypePriority = [
     WeatherType.Sunny,
 ]
 
-export function GetImageSrcFor(forecast: string): string {
+export function GetWeatherTypeFor(forecast: string): WeatherType {
     for (const weatherType of WeatherTypePriority) {
-        const weatherTypeData = WeatherTypeData[weatherType]
-        for (const word of weatherTypeData.words) {
+        const weatherTypeMetadata = WeatherTypeToMetadata[weatherType]
+        for (const word of weatherTypeMetadata.words) {
             if (forecast.toLowerCase().includes(word)) {
-                return weatherTypeData.src
+                return weatherType
             }
         }
     }
 
-    return WeatherTypeData[WeatherType.Sunny].src
-}
-
-export function GetClimateChangeImageSrcFor(forecast: string): string {
-    for (const weatherType of WeatherTypePriority) {
-        const weatherTypeData = WeatherTypeData[weatherType]
-        for (const word of weatherTypeData.words) {
-            if (forecast.toLowerCase().includes(word)) {
-                return weatherTypeData.cc_src
-            }
-        }
-    }
-    return WeatherTypeData[WeatherType.Sunny].cc_src
-}
-
-export function GetAdvice(forecast: string): string {
-    for (const weatherType of WeatherTypePriority) {
-        const weatherTypeData = WeatherTypeData[weatherType]
-        for (const word of weatherTypeData.words) {
-            if (forecast.toLowerCase().includes(word)) {
-                return weatherTypeData.advice
-            }
-        }
-    }
-    return WeatherTypeData[WeatherType.Sunny].advice
+    return WeatherTypePriority[WeatherTypePriority.length - 1]
 }

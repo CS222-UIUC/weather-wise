@@ -4,7 +4,7 @@ import WeatherPanel from './WeatherPanel'
 
 import styles from './WeatherForecastDaily.module.sass'
 import { DayForecast } from 'src/data/WeatherReport'
-import { GetImageSrcFor } from 'src/data/WeatherType'
+import { GetWeatherTypeFor, WeatherTypeToMetadata } from 'src/data/WeatherType'
 
 type MyProps = {
     unit: string
@@ -41,7 +41,11 @@ export default class WeatherForecastDaily extends React.Component<MyProps> {
                             {dayForecast.low}°
                         </p>
                         <img
-                            src={GetImageSrcFor(dayForecast.shortForecast)}
+                            src={
+                                WeatherTypeToMetadata[
+                                    GetWeatherTypeFor(dayForecast.shortForecast)
+                                ].src
+                            }
                         ></img>
                     </div>
                 ))}

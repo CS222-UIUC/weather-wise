@@ -3,7 +3,7 @@ import React from 'react'
 import WeatherPanel from './WeatherPanel'
 import styles from './WeatherForecastCurrent.module.sass'
 import { TodayData } from 'src/data/WeatherReport'
-import { GetImageSrcFor } from 'src/data/WeatherType'
+import { GetWeatherTypeFor, WeatherTypeToMetadata } from 'src/data/WeatherType'
 
 //, high: string, low: string, weather: string
 interface MyProps {
@@ -21,6 +21,8 @@ export default class WeatherForecastCurrent extends React.Component<
 > {
     render() {
         const today = this.props.data
+        const weatherType = GetWeatherTypeFor(today.shortForecast)
+        const weatherTypeMetadata = WeatherTypeToMetadata[weatherType]
         return (
             <div className={styles.WeatherForecastCurrent}>
                 <div>
@@ -34,7 +36,7 @@ export default class WeatherForecastCurrent extends React.Component<
                         </div>
                     </div>
                     <div className={styles.icon}>
-                        <img src={GetImageSrcFor(today.shortForecast)}></img>
+                        <img src={weatherTypeMetadata.src}></img>
                     </div>
                 </div>
                 <p className={styles.notice}>

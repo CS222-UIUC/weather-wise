@@ -57,10 +57,7 @@ export default function Content() {
                     />
                     {report && (
                         <>
-                            <WeatherWarnings
-                                forecast={report.today.detailedForecast}
-                                data={report.today}
-                            />
+                            <WeatherWarnings data={report.today} />
                             <HistoryGraph
                                 unit={report.unit}
                                 data={report.today}
