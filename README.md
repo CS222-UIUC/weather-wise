@@ -6,7 +6,7 @@ and showing you related impacts of climate change across the globe.
 
 #Technical Architecture
 
-![ ](the-weather-app/frontend/public/images/TechnicalComponents.png)
+![img](/frontend/public/images/TechnicalComponents.png)
 
 # Development
 Please see [DEVELOPMENT.md](DEVELOPMENT.md) for setup instructions.
