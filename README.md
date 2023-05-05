@@ -6,7 +6,7 @@ and showing you related impacts of climate change across the globe.
 
 This app is built using React and data from the National Weather Service. To access current location, make sure that location privleges are allowed. Otherwise, enter a location within the United States to view its weather. 
 
-#Technical Architecture
+# Technical Architecture
 
 ![ ](/frontend/public/images/TechnicalComponents.png)
 
