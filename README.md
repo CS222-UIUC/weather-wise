@@ -8,7 +8,7 @@ This app is built using React and data from the National Weather Service. To acc
 
 # Technical Architecture
 
-![ ](/frontend/public/images/TechnicalComponents.png)
+![Technical components graph](res/technical_components.png)
 
 # Member Roles
 Eeshan Garr: Backend and server development
