@@ -30,4 +30,4 @@ TODO: Use docker to make this easier
 > For these commands, you may have to use `python` or `python3`, depending on how your system is set up.
 > You can run `python --version` to make sure you are using python 3.
 
-1. To run, simply run `python3 app.py`.
+1. To run, simply run `python3 api/index.py`.
