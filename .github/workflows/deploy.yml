@@ -38,17 +38,18 @@ jobs:
         shell: bash
         run: echo "dir=$(npm config get cache)" >> ${GITHUB_OUTPUT}
       - uses: actions/cache@v3
-        id: npm-cache # We use this to check for `cache-hit`, so we don't install when we have a cache
+        id: npm-cache
         with:
           path: ${{ steps.npm-cache-dir.outputs.dir }}
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
       - name: npm install
-        if: steps.npm-cache.outputs.cache-hit != 'true'
-        run: cd frontend && npm install
+        working-directory: frontend
+        run: npm install
       - name: Build site
-        run: cd frontend && npm run build
+        working-directory: frontend
+        run: npm run build
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:
