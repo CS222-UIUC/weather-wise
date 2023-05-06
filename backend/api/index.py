@@ -17,7 +17,7 @@ PORT = 5000
 
 CORS(
     app,
-    origins=["http://localhost:3000", "https://weather-wise-backend.vercel.app"],
+    origins=["http://localhost:3000", "https://weather-wise.github.io"],
     allow_headers=r"*",
 )
 
