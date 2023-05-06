@@ -1,6 +1,5 @@
 import React from 'react'
 
-import WeatherPanel from './WeatherPanel'
 import styles from './WeatherForecastCurrent.module.sass'
 import { TodayData } from 'src/data/WeatherReport'
 import { GetWeatherTypeFor, WeatherTypeToMetadata } from 'src/data/WeatherType'
