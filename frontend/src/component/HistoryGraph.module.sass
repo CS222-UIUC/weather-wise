@@ -6,6 +6,9 @@
         padding: 0.5rem 1rem
         width: fit-content
     > img
-        width: 75%
+        width: calc(100% - 2rem)
         margin-left: 0.75rem
         margin-top: 0.5rem
+
+        @media (min-width: 75rem)
+            width: 75%

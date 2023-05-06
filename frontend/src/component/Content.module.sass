@@ -9,6 +9,10 @@
 
 .columns
     display: flex
+    flex-wrap: wrap
+
+    @media (max-width: 50rem)
+        flex-direction: column
 
 .column
     flex-grow: 1
