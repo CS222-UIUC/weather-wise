@@ -3,6 +3,7 @@ import json
 from datetime import datetime, timedelta
 import pytz
 from flask import Flask, jsonify, Response
+from flask_cors import CORS
 import geopy.location
 from geopy.location import Location
 from geopy.geocoders import Nominatim
@@ -11,6 +12,14 @@ import math
 
 geolocator = Nominatim(user_agent="weather-app", timeout=10)
 app = Flask(__name__)
+
+PORT = 5000
+
+CORS(
+    app,
+    origins=["http://localhost:3000", "https://weather-wise-backend.vercel.app"],
+    allow_headers=r"*",
+)
 
 
 # Convert location to latitude and longitude coordinates using geopy
@@ -294,4 +303,4 @@ def weather(location):
 
 
 if __name__ == "__main__":  # Run app
-    app.run()
+    app.run(port=PORT)

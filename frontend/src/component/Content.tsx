@@ -7,7 +7,7 @@ import WeatherForecastHourly from './WeatherForecastHourly'
 import WeatherForecastDaily from './WeatherForecastDaily'
 import WeatherWarnings from './WeatherWarnings'
 import WeatherReport from 'src/data/WeatherReport'
-import { USE_LOCAL_LOCATION } from 'src/constants'
+import { BACKEND_URL, USE_LOCAL_LOCATION } from 'src/constants'
 import HistoryGraph from './HistoryGraph'
 
 function getLocalLocation(): Promise<string> {
@@ -43,7 +43,7 @@ export default function Content() {
                     reject(error)
                 })
         })
-            .then((location) => fetch('/weather/' + location))
+            .then((location) => fetch(`${BACKEND_URL}/weather/${location}`))
             .then((res) => {
                 if (res.ok) {
                     return res.json()
